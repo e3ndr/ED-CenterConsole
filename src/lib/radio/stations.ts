@@ -172,7 +172,7 @@ async function fetchLoop(station: RadioStation) {
         }
 
         const timeUntilChange = current.lengthMs - (Date.now() - current.startedAtMs);
-        setTimeout(() => fetchLoop(station), timeUntilChange);
+        setTimeout(() => fetchLoop(station), Math.max(timeUntilChange, 15_000));
     } else {
         setTimeout(() => fetchLoop(station), 15_000);
     }
