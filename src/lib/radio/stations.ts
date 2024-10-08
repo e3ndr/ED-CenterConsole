@@ -73,7 +73,7 @@ export const STATIONS: RadioStation[] = [
     // },
     {
         name: "Radio Sidewinder",
-        streamUrl: "http://radiosidewinder.out.airtime.pro:8000/radiosidewinder_a",
+        streamUrl: "https://radiosidewinder.out.airtime.pro:8000/radiosidewinder_a",
         songInfo: writable(null),
         async fetchCurrentSongInfo() {
             const json = await (await fetch("https://radiosidewinder.airtime.pro/api/live-info")).json()
