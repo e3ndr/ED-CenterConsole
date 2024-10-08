@@ -12,6 +12,13 @@
 	let player: HTMLAudioElement | null = null;
 	let desiredVolume = 80;
 
+	$: player,
+		(() => {
+			if (typeof document != 'undefined') {
+				document.title = player ? `EDCC - ${currentStation.name}` : 'EDCC';
+			}
+		})();
+
 	function changeStation(delta: number) {
 		currentStationIdx += delta;
 		if (currentStationIdx == STATIONS.length) {
@@ -40,14 +47,6 @@
 		player?.pause();
 	});
 </script>
-
-<svelte:head>
-	{#if currentStation}
-		<title>EDCC - {currentStation.name}</title>
-	{:else}
-		<title>ED-CenterConsole</title>
-	{/if}
-</svelte:head>
 
 <div class="bg-base-dim text-orange-bright absolute inset-0">
 	<div class="border-b-orange-dim border-t-orange-dim mt-2 border-b-4 border-t-4 px-4 text-xl">
