@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    font-family: "Eurostile Regular";
+}
+
+.font-segment {
+    font-family: "DSEG14Classic-Regular";
+}
+
+@font-face {
+    font-family: 'DSEG14Classic-Regular';
+    src: local('DSEG14Classic-Regular'), url('/fonts/DSEG14Classic-Regular.woff');
+}
+
+@font-face {
+    font-family: 'Eurostile Regular';
+    src: local('Eurostile Regular'), url('/fonts/eurostile.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'EuroStyle Normal';
+    src: local('EuroStyle Normal'), url('/fonts/EuroStyle Normal.woff') format('woff');
+}
