@@ -67,7 +67,6 @@
 					class="mt-6 h-20 w-20 rounded-full bg-[#2c2c2c] text-xs"
 					title="Click to toggle, scroll to change volume."
 					on:wheel={(e) => {
-						console.log(e);
 						if (e.deltaY < 1) {
 							if (desiredVolume < 100) {
 								desiredVolume += 5;
