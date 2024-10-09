@@ -1,9 +1,15 @@
 <script lang="ts">
-	import { STATIONS } from '$lib/radio/stations';
-	import type { RadioStationSong } from '$lib/radio/stations';
 	import WidthBasedMarquee from '$lib/WidthBasedMarquee.svelte';
+
+	import { EDLA_INSTANCE, EDLAState } from '$lib/EDLA';
+	import { STATIONS, type RadioStationSong } from '$lib/radio/stations';
 	import { onDestroy, onMount } from 'svelte';
 	import { writable, type Writable } from 'svelte/store';
+
+	const edlaState = EDLA_INSTANCE.state;
+	const edlaStatus = EDLA_INSTANCE.status;
+	const edlaLocation = EDLA_INSTANCE.location;
+	const edlaCommander = EDLA_INSTANCE.commander;
 
 	let currentStationIdx = -1;
 
@@ -48,16 +54,23 @@
 	});
 </script>
 
-<div class="bg-base-dim text-orange-bright absolute inset-0">
-	<div class="border-b-orange-dim border-t-orange-dim mt-2 border-b-4 border-t-4 px-4 text-xl">
-		Welcome back, CMDR Lcyx
+<div class="absolute inset-0 bg-base-dim text-orange-bright">
+	<div class="mt-2 border-b-4 border-t-4 border-b-orange-dim border-t-orange-dim px-4 text-xl">
+		{#if $edlaState == EDLAState.NOT_CONNECTED}
+			Welcome back, waiting for
+			<a href="https://github.com/e3ndr/ED-LocalAPI" target="_blank">EDLA</a>.
+		{:else if $edlaState == EDLAState.GAME_RUNNING && $edlaCommander}
+			Welcome back, CMDR {$edlaCommander.Name.toUpperCase()}.
+		{:else}
+			Welcome back, waiting for Elite Dangerous.
+		{/if}
 	</div>
 
 	<div class="relative mx-auto mt-20 h-60 w-[50rem] rounded-md bg-[#1b1b1b] p-6">
 		<div
 			class:bg-red-bright={player}
 			class:bg-red-dim={!player}
-			class="ring-red-dim ring-px absolute left-5 top-5 h-3 w-3 rounded-full"
+			class="ring-px absolute left-5 top-5 h-3 w-3 rounded-full ring-red-dim"
 		></div>
 
 		<div class="flex h-full w-full justify-center">
@@ -106,7 +119,7 @@
 				<div
 					class="font-segment relative h-28 space-y-4 rounded-md bg-[#0f0f0f] px-4 py-3 text-5xl"
 				>
-					<p class="text-blue-bright h-12 w-[14ch] overflow-hidden text-nowrap">
+					<p class="h-12 w-[14ch] overflow-hidden text-nowrap text-blue-bright">
 						{#if player}
 							<WidthBasedMarquee
 								text={(currentStation?.name || '').replaceAll(
@@ -117,7 +130,7 @@
 							/>
 						{/if}
 					</p>
-					<p class="text-blue-dim absolute bottom-3 h-7 w-[34ch] overflow-hidden text-xl">
+					<p class="absolute bottom-3 h-7 w-[34ch] overflow-hidden text-xl text-blue-dim">
 						{#if player}
 							<WidthBasedMarquee
 								text={[$songInfo?.name, $songInfo?.author]
@@ -132,4 +145,17 @@
 			</div>
 		</div>
 	</div>
+
+	State:
+	<pre>{$edlaState}</pre>
+
+	{#if $edlaState == EDLAState.GAME_RUNNING}
+		Status: <pre>{JSON.stringify($edlaStatus)}</pre>
+		<br />
+		Location:
+		<pre>{JSON.stringify($edlaLocation)}</pre>
+		<br />
+		Commander:
+		<pre>{JSON.stringify($edlaCommander)}</pre>
+	{/if}
 </div>
