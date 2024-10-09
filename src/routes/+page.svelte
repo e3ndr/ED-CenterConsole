@@ -94,7 +94,7 @@
 	<div class="mt-2 border-b-4 border-t-4 border-b-orange-dim border-t-orange-dim px-4 text-xl">
 		{#if $edlaState == EDLAState.NOT_CONNECTED}
 			Welcome back, waiting for
-			<a href="https://github.com/e3ndr/ED-LocalAPI" target="_blank">EDLA</a>.
+			<a href="https://github.com/e3ndr/ED-LocalAPI" target="_blank" class="underline">EDLA</a>.
 		{:else if $edlaState == EDLAState.GAME_RUNNING && $edlaCommander}
 			Welcome back, CMDR {$edlaCommander.Name.toUpperCase()}.
 		{:else}
