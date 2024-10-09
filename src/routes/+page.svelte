@@ -10,6 +10,7 @@
 	const edlaStatus = EDLA_INSTANCE.status;
 	const edlaLocation = EDLA_INSTANCE.location;
 	const edlaCommander = EDLA_INSTANCE.commander;
+	const edlaEmergencyOxygen = EDLA_INSTANCE.emergencyOxygen;
 
 	let currentStationIdx = -1;
 
@@ -25,6 +26,48 @@
 			}
 		})();
 
+	onMount(() =>
+		edlaEmergencyOxygen.subscribe(() => {
+			updatePlayer(player ? true : false);
+		})
+	);
+
+	function updatePlayer(create: boolean) {
+		player?.pause();
+		player = null;
+
+		if (!create) return;
+
+		// Replace the current player.
+		player = new Audio(STATIONS[currentStationIdx].streamUrl);
+		player.crossOrigin = 'anonymous';
+		player.volume = desiredVolume / 100;
+
+		if ($edlaEmergencyOxygen) {
+			const audioContext = new AudioContext();
+			const source = audioContext.createMediaElementSource(player);
+
+			const gainNode = audioContext.createGain();
+			gainNode.gain.value = 0.75;
+
+			// Lowpass filter to muddle the band.
+			const filterNode = audioContext.createBiquadFilter();
+			filterNode.type = 'lowpass';
+			filterNode.frequency.value = 400;
+
+			// Delay for additional effect.
+			const delayNode = audioContext.createDelay();
+			delayNode.delayTime.value = 0.2;
+
+			source.connect(gainNode);
+			gainNode.connect(filterNode);
+			filterNode.connect(delayNode);
+			delayNode.connect(audioContext.destination);
+		}
+
+		player.play();
+	}
+
 	function changeStation(delta: number) {
 		currentStationIdx += delta;
 		if (currentStationIdx == STATIONS.length) {
@@ -34,15 +77,7 @@
 		}
 
 		songInfo = STATIONS[currentStationIdx].songInfo;
-
-		player?.pause();
-
-		if (player) {
-			// Replace the current player.
-			player = new Audio(STATIONS[currentStationIdx].streamUrl);
-			player.volume = desiredVolume / 100;
-			player.play();
-		}
+		updatePlayer(player ? true : false);
 	}
 
 	onMount(() => {
@@ -65,8 +100,12 @@
 			Welcome back, waiting for Elite Dangerous.
 		{/if}
 
-		{#if $edlaState == EDLAState.GAME_RUNNING && $edlaLocation}
-			<p class="float-right flex items-center">
+		<span class="float-right inline-flex items-center">
+			{#if $edlaEmergencyOxygen}
+				<span class="mr-5 text-red-bright"> DANGER </span>
+			{/if}
+
+			{#if $edlaState == EDLAState.GAME_RUNNING && $edlaLocation}
 				{#if $edlaLocation.Docked || $edlaLocation.event == 'ApproachSettlement' || $edlaLocation.event == 'Docked' || $edlaLocation.event == 'Undocked' || $edlaLocation.event == 'DockingRequested' || ($edlaLocation.event == 'SupercruiseExit' && $edlaLocation.BodyType == 'Station')}
 					<!-- svelte-ignore a11y-missing-attribute -->
 					<object
@@ -95,8 +134,8 @@
 					/>
 					{$edlaLocation.Body.toUpperCase()}
 				{/if}
-			</p>
-		{/if}
+			{/if}
+		</span>
 	</div>
 
 	<div class="relative mx-auto mt-20 h-60 w-[50rem] rounded-md bg-[#1b1b1b] p-6">
@@ -127,14 +166,7 @@
 						}
 					}}
 					on:click={() => {
-						if (player) {
-							player.pause();
-							player = null;
-						} else {
-							player = new Audio(STATIONS[currentStationIdx].streamUrl);
-							player.volume = desiredVolume / 100;
-							player.play();
-						}
+						updatePlayer(!player);
 					}}
 				>
 					<div class="h-full w-full" style="transform: rotate({(desiredVolume / 100) * 360}deg);">
@@ -179,7 +211,7 @@
 		</div>
 	</div>
 
-	State:
+	<!-- State:
 	<pre>{$edlaState}</pre>
 
 	{#if $edlaState == EDLAState.GAME_RUNNING}
@@ -190,5 +222,5 @@
 		<br />
 		Commander:
 		<pre>{JSON.stringify($edlaCommander)}</pre>
-	{/if}
+	{/if} -->
 </div>

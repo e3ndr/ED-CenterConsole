@@ -14,6 +14,7 @@ export class EDLA {
     status = writable<null | any>(null);
     location = writable<null | any>(null);
     commander = writable<null | any>(null);
+    emergencyOxygen = writable<boolean>(false);
 
     constructor() {
         const checkEdla = async () => {
@@ -31,11 +32,13 @@ export class EDLA {
 
                     gameWebsocket.onclose = () => {
                         this.state.set(EDLAState.NOT_CONNECTED);
+                        this.emergencyOxygen.set(false);
                     }
 
                     gameWebsocket.onerror = (e) => {
                         console.error(e);
                         this.state.set(EDLAState.NOT_CONNECTED);
+                        this.emergencyOxygen.set(false);
                     }
 
                     gameWebsocket.onmessage = async (e) => {
@@ -47,6 +50,15 @@ export class EDLA {
                                 if (typeof e.data != "string") return; // We don't use binary messages.
                                 const json = JSON.parse(e.data);
                                 this.status.set(json);
+
+                                const flags = json.Flags || 0;
+
+                                const isInDanger = (flags & 0b10000000000000000000000) != 0;
+                                console.debug("isInDanger", isInDanger);
+
+                                if (isInDanger != get(this.emergencyOxygen)) {
+                                    this.emergencyOxygen.set(isInDanger);
+                                }
                             }
 
                             const handleJournalEvent = (json: any | null) => {
@@ -113,4 +125,5 @@ export const EDLA_INSTANCE: EDLA = typeof window == "undefined" ? {
     status: writable(null),
     location: writable(null),
     commander: writable(null),
+    emergencyOxygen: writable(false),
 } : new EDLA();
