@@ -108,57 +108,6 @@ export const STATIONS: RadioStation[] = [
             };
         }
     },
-    {
-        name: "Echos of Bluemars",
-        streamUrl: "http://streams.echoesofbluemars.org:8000/bluemars",
-        songInfo: writable(null),
-        async fetchCurrentSongInfo() {
-            return {
-                name: null,
-                author: null,
-                imageUrl: "http://echoesofbluemars.org/images/echoes_of_bluemars_700x394.jpg",
-                lengthMs: Number.MAX_SAFE_INTEGER,
-                startedAtMs: 0,
-                getCurrentProgress() {
-                    return 0;
-                },
-            };
-        }
-    },
-    {
-        name: "Echos of Bluemars: Cryosleep",
-        streamUrl: "http://streams.echoesofbluemars.org:8000/cryosleep",
-        songInfo: writable(null),
-        async fetchCurrentSongInfo() {
-            return {
-                name: null,
-                author: null,
-                imageUrl: "http://echoesofbluemars.org/images/echoes_of_bluemars_700x394.jpg",
-                lengthMs: Number.MAX_SAFE_INTEGER,
-                startedAtMs: 0,
-                getCurrentProgress() {
-                    return 0;
-                },
-            };
-        }
-    },
-    {
-        name: "Echos of Bluemars: Voices From Within",
-        streamUrl: "http://streams.echoesofbluemars.org:8000/voicesfromwithin",
-        songInfo: writable(null),
-        async fetchCurrentSongInfo() {
-            return {
-                name: null,
-                author: null,
-                imageUrl: "http://echoesofbluemars.org/images/echoes_of_bluemars_700x394.jpg",
-                lengthMs: Number.MAX_SAFE_INTEGER,
-                startedAtMs: 0,
-                getCurrentProgress() {
-                    return 0;
-                },
-            };
-        }
-    },
 ];
 
 async function fetchLoop(station: RadioStation) {
