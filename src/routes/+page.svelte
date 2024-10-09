@@ -48,7 +48,7 @@
 			const source = audioContext.createMediaElementSource(player);
 
 			const gainNode = audioContext.createGain();
-			gainNode.gain.value = 0.75;
+			gainNode.gain.value = 0.9;
 
 			// Lowpass filter to muddle the band.
 			const filterNode = audioContext.createBiquadFilter();
