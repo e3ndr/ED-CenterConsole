@@ -39,9 +39,10 @@
 		if (!create) return;
 
 		// Replace the current player.
+		// Note we have to use STATIONS[currentStationIdx] because currentStation hasn't updated yet.
 		player = new Audio(STATIONS[currentStationIdx].streamUrl);
 		player.crossOrigin = 'anonymous';
-		player.volume = desiredVolume / 100;
+		player.volume = (desiredVolume / 100) * STATIONS[currentStationIdx].volumeScale;
 
 		if ($edlaEmergencyOxygen) {
 			const audioContext = new AudioContext();
@@ -162,7 +163,7 @@
 						}
 
 						if (player) {
-							player.volume = desiredVolume / 100;
+							player.volume = (desiredVolume / 100) * currentStation.volumeScale;
 						}
 					}}
 					on:click={() => {

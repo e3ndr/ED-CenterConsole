@@ -13,6 +13,7 @@ export declare type RadioStation = {
     name: string,
     streamUrl: string,
     songInfo: Writable<RadioStationSong | null>,
+    volumeScale: number,
     fetchCurrentSongInfo(): Promise<RadioStationSong | null>,
 }
 
@@ -21,6 +22,7 @@ export const STATIONS: RadioStation[] = [
         name: "Radio Skvortsov",
         streamUrl: "https://cast1.torontocast.com:3225/stream",
         songInfo: writable(null),
+        volumeScale: 1,
         async fetchCurrentSongInfo() {
             const json = await (await fetch("https://cast1.torontocast.com:3210/api/v2/history/?limit=1&offset=0&server=1")).json()
             return {
@@ -39,6 +41,7 @@ export const STATIONS: RadioStation[] = [
         name: "Hutton Orbital Radio",
         streamUrl: "https://quincy.torontocast.com/hutton",
         songInfo: writable(null),
+        volumeScale: 1,
         async fetchCurrentSongInfo() {
             const json = await (await fetch("https://quincy.torontocast.com:2760/api/v2/history/?limit=1&offset=0&server=1")).json()
             return {
@@ -57,6 +60,7 @@ export const STATIONS: RadioStation[] = [
     //     name: "Lave Radio",
     //     streamUrl: "https://kathy.torontocast.com:1545/stream",
     //     songInfo: writable(null),
+    //     volumeScale: 1,
     //     async fetchCurrentSongInfo() {
     //         const json = await (await fetch("https://kathy.torontocast.com:1350/api/v2/history/?limit=1&offset=0&server=1")).json()
     //         return {
@@ -75,6 +79,7 @@ export const STATIONS: RadioStation[] = [
         name: "Radio Sidewinder",
         streamUrl: "https://radiosidewinder.out.airtime.pro:8000/radiosidewinder_a",
         songInfo: writable(null),
+        volumeScale: .75,
         async fetchCurrentSongInfo() {
             const json = await (await fetch("https://radiosidewinder.airtime.pro/api/live-info")).json()
             const startedAt = new Date(json.current.starts).getTime();
@@ -95,6 +100,7 @@ export const STATIONS: RadioStation[] = [
         name: "NASA's Third Rock Radio",
         streamUrl: "https://rfcm.streamguys1.com/thirdrock-mp3",
         songInfo: writable(null),
+        volumeScale: .45,
         async fetchCurrentSongInfo() {
             const json = await (await fetch("https://jetapi.streamguys.com/67aba0b806d22e74d235bd2564f5b0cc5aab5824/scraper/c37faecf-887a-4672-8094-bd795223997a/metadata")).json()
             // This doesn't actually give us author or the audio length. So we just set our interval to 15s and hope for the best.
