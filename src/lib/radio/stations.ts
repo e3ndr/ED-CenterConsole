@@ -96,12 +96,14 @@ export const STATIONS: RadioStation[] = [
         streamUrl: "https://rfcm.streamguys1.com/thirdrock-mp3",
         songInfo: writable(null),
         async fetchCurrentSongInfo() {
+            const json = await (await fetch("https://jetapi.streamguys.com/67aba0b806d22e74d235bd2564f5b0cc5aab5824/scraper/c37faecf-887a-4672-8094-bd795223997a/metadata")).json()
+            // This doesn't actually give us author or the audio length. So we just set our interval to 15s and hope for the best.
             return {
-                name: null,
+                name: json.StreamTitle,
                 author: null,
                 imageUrl: "https://player.streamguys.com/thirdrock/sgplayer/include/image/ThirdRockRadio500x500.jpg",
-                lengthMs: Number.MAX_SAFE_INTEGER,
-                startedAtMs: 0,
+                lengthMs: 15_000,
+                startedAtMs: json.timestamp,
                 getCurrentProgress() {
                     return 0;
                 },
