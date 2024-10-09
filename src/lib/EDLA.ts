@@ -12,6 +12,7 @@ export class EDLA {
     state = writable<EDLAState>(EDLAState.NOT_CONNECTED);
 
     status = writable<null | any>(null);
+    location = writable<null | any>(null);
     commander = writable<null | any>(null);
 
     constructor() {
@@ -51,6 +52,26 @@ export class EDLA {
                             const handleJournalEvent = (json: any | null) => {
                                 if (json == null) return;
                                 switch (json.event) {
+
+                                    case "StartJump":
+                                        if (json.JumpType == "Hypserspace") {
+                                            this.location.set({ "timestamp": "2016-09-21T14:11:22Z", "event": "Location", "Docked": false, "StarSystem": "HyperSpace", "StarPos": [0, 0, 0], "Allegiance": "", "Economy": "", "Economy_Localised": "", "Government": "", "Government_Localised": "", "Security": "", "Security_Localised": "", "Body": "Hyperspace", "Powers": [], "PowerplayState": "", "Faction": "", "FactionState": "" });
+                                        }
+                                        break;
+
+                                    case "Undocked":
+                                    case "Docked":
+                                    case "FSDJump":
+                                    case "Location":
+                                    case "ApproachBody":
+                                    case "LeaveBody":
+                                    case "ApproachSettlement":
+                                    case "SupercruiseEntry":
+                                    case "SupercruiseExit":
+                                    case "DockingRequested":
+                                        this.location.set(json);
+                                        break;
+
                                     case "Commander":
                                         this.commander.set(json);
                                         break;
@@ -90,5 +111,6 @@ export const EDLA_INSTANCE: EDLA = typeof window == "undefined" ? {
     address: "<unknown>",
     state: writable(EDLAState.NOT_CONNECTED),
     status: writable(null),
+    location: writable(null),
     commander: writable(null),
 } : new EDLA();

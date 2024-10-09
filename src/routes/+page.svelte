@@ -64,6 +64,39 @@
 		{:else}
 			Welcome back, waiting for Elite Dangerous.
 		{/if}
+
+		{#if $edlaState == EDLAState.GAME_RUNNING && $edlaLocation}
+			<p class="float-right flex items-center">
+				{#if $edlaLocation.Docked || $edlaLocation.event == 'ApproachSettlement' || $edlaLocation.event == 'Docked' || $edlaLocation.event == 'Undocked' || $edlaLocation.event == 'DockingRequested' || ($edlaLocation.event == 'SupercruiseExit' && $edlaLocation.BodyType == 'Station')}
+					<!-- svelte-ignore a11y-missing-attribute -->
+					<object
+						data="/icons/{$edlaLocation.StationType || 'SurfacePort'}.svg"
+						class="mr-1.5 inline-block h-4 w-auto -translate-y-px"
+					>
+						<img
+							src="/icons/SurfacePort.svg"
+							alt=""
+							class="mr-1.5 inline-block h-4 w-auto -translate-y-px"
+						/>
+					</object>
+					{($edlaLocation.StationName || $edlaLocation.Name || $edlaLocation.Body).toUpperCase()}
+				{:else if $edlaLocation.BodyType == 'Star' || $edlaLocation.event == 'LeaveBody' || $edlaLocation.event == 'SupercruiseEntry'}
+					<img
+						src="/icons/System.svg"
+						alt=""
+						class="mr-1.5 inline-block h-4 w-auto -translate-y-px"
+					/>
+					{$edlaLocation.StarSystem.toUpperCase()}
+				{:else}
+					<img
+						src="/icons/Planet.svg"
+						alt=""
+						class="mr-1.5 inline-block h-4 w-auto -translate-y-px"
+					/>
+					{$edlaLocation.Body.toUpperCase()}
+				{/if}
+			</p>
+		{/if}
 	</div>
 
 	<div class="relative mx-auto mt-20 h-60 w-[50rem] rounded-md bg-[#1b1b1b] p-6">
