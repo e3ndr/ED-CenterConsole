@@ -52,11 +52,10 @@ export class EDLA {
                                 this.status.set(json);
 
                                 const flags = json.Flags || 0;
-
                                 const isInDanger = (flags & 0b10000000000000000000000) != 0;
-                                console.debug("isInDanger", isInDanger);
 
                                 if (isInDanger != get(this.emergencyOxygen)) {
+                                    console.debug("isInDanger", isInDanger);
                                     this.emergencyOxygen.set(isInDanger);
                                 }
                             }
