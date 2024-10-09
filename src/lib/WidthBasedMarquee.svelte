@@ -9,7 +9,7 @@
 
 	onMount(() => {
 		const id = setInterval(() => {
-			const textLength = text.replaceAll(/<span style="opacity: 0;">0<\/span>/g, ' ').length;
+			const textLength = text.length;
 
 			if (textLength <= maxCharacters) {
 				offset = 0;
@@ -35,5 +35,8 @@
 	class="inline-block text-nowrap"
 	style="margin: 0; padding: 0; transform: translateX({offset}ch);"
 >
-	{@html text}
+	{@html text.replaceAll(
+		/ /g,
+		'<span style="opacity: 0; user-select: none;">0</span><span style="font-size: 0;"> </span>'
+	)}
 </span>

@@ -186,24 +186,19 @@
 				>
 					<p class="h-12 w-[14ch] overflow-hidden text-nowrap text-blue-bright">
 						{#if player}
-							<WidthBasedMarquee
-								text={(currentStation?.name || '').replaceAll(
-									/ /g,
-									'<span style="opacity: 0;">0</span>'
-								)}
-								maxCharacters={14}
-							/>
+							{#key currentStation}
+								<WidthBasedMarquee text={currentStation?.name || ''} maxCharacters={14} />
+							{/key}
 						{/if}
 					</p>
 					<p class="absolute bottom-3 h-7 w-[34ch] overflow-hidden text-xl text-blue-dim">
 						{#if player}
-							<WidthBasedMarquee
-								text={[$songInfo?.name, $songInfo?.author]
-									.filter((p) => p)
-									.join(' - ')
-									.replaceAll(/ /g, '<span style="opacity: 0;">0</span>')}
-								maxCharacters={34}
-							/>
+							{#key $songInfo}
+								<WidthBasedMarquee
+									text={[$songInfo?.name, $songInfo?.author].filter((p) => p).join(' - ')}
+									maxCharacters={34}
+								/>
+							{/key}
 						{/if}
 					</p>
 				</div>
