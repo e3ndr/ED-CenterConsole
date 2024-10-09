@@ -18,7 +18,7 @@
 
 			offset += direction;
 			if (direction == -1) {
-				if (textLength + offset == maxCharacters) {
+				if (textLength + offset <= maxCharacters) {
 					direction = 1;
 				}
 			} else {
